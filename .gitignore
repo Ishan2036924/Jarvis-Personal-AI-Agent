@@ -1,0 +1,17 @@
+# Personal config — never push these
+IDENTITY.md
+SOUL.md
+USER.md
+MEMORY.md
+TOOLS.md
+HEARTBEAT.md
+ARCHIVE.md
+
+# Memory logs and sessions
+memory/
+../../agents/
+
+# Credentials
+../.env
+../certs/
+*.json.bak
