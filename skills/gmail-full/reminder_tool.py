@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Reminder tool — creates one-shot cron jobs via CLI."""
-import sys, json, subprocess
+import os, sys, json, subprocess
 
 def set_reminder(duration, message):
     """duration: +5m, +1h, +30m etc."""
@@ -13,7 +13,7 @@ def set_reminder(duration, message):
         "--session", "isolated",
         "--announce",
         "--channel", "telegram",
-        "--to", "8519712567",
+        "--to", os.environ.get("TELEGRAM_CHAT_ID", "YOUR_TELEGRAM_CHAT_ID"),
         "--message", f"⏰ Reminder: {message}",
         "--delete-after-run"
     ]

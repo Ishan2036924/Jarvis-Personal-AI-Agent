@@ -15,10 +15,10 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.send',
            'https://www.googleapis.com/auth/gmail.modify']
 
 def _sign(body, html):
-    """Append Ishan's standard signature. Called by send_email() and reply_email()."""
+    """Append YOUR_NAME's standard signature. Called by send_email() and reply_email()."""
     if html:
-        return body + '<br><br>Regards,<br>Ishan Srivastava<br>YOUR_EMAIL'
-    return body + '\n\nRegards,\nIshan Srivastava\nYOUR_EMAIL'
+        return body + '<br><br>Regards,<br>YOUR_NAME<br>YOUR_EMAIL'
+    return body + '\n\nRegards,\nYOUR_NAME\nYOUR_EMAIL'
 
 def get_service():
     with open(TOKEN_PATH + '.lock', 'w') as lock:
@@ -139,26 +139,6 @@ def forward_email(message_id, to):
     result = service.users().messages().send(userId='me', body={'raw': raw}).execute()
     print(json.dumps({"status": "forwarded", "messageId": result['id'], "to": to}))
 
-if __name__ == '__main__':
-    action = sys.argv[1] if len(sys.argv) > 1 else 'help'
-    if action == 'send':
-        to, subject, body = sys.argv[2], sys.argv[3], sys.argv[4]
-        attachments = sys.argv[5] if len(sys.argv) > 5 and sys.argv[5] != '--no-html' else None
-        html = '--no-html' not in sys.argv  # HTML is default; pass --no-html to force plaintext
-        send_email(to, subject, body, attachments, html=html)
-    elif action == 'reply':
-        reply_email(sys.argv[2], sys.argv[3], '--no-html' not in sys.argv)
-    elif action == 'forward':
-        forward_email(sys.argv[2], sys.argv[3])
-    elif action == 'download':
-        download_attachments(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else '/home/YOUR_USERNAME/files')
-    elif action == 'search':
-        search_emails(sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 10)
-    elif action == 'read':
-        read_email(sys.argv[2])
-    else:
-        print("Usage: gmail_tool.py send|search|read|reply|forward ...")
-
 def download_attachments(message_id, save_dir="/home/YOUR_USERNAME/files"):
     """Download all attachments from an email."""
     os.makedirs(save_dir, exist_ok=True)
@@ -180,3 +160,23 @@ def download_attachments(message_id, save_dir="/home/YOUR_USERNAME/files"):
                 f.write(data)
             downloaded.append(filepath)
     print(json.dumps({"status": "downloaded", "files": downloaded}))
+
+if __name__ == '__main__':
+    action = sys.argv[1] if len(sys.argv) > 1 else 'help'
+    if action == 'send':
+        to, subject, body = sys.argv[2], sys.argv[3], sys.argv[4]
+        attachments = sys.argv[5] if len(sys.argv) > 5 and sys.argv[5] != '--no-html' else None
+        html = '--no-html' not in sys.argv  # HTML is default; pass --no-html to force plaintext
+        send_email(to, subject, body, attachments, html=html)
+    elif action == 'reply':
+        reply_email(sys.argv[2], sys.argv[3], '--no-html' not in sys.argv)
+    elif action == 'forward':
+        forward_email(sys.argv[2], sys.argv[3])
+    elif action == 'download':
+        download_attachments(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else '/home/YOUR_USERNAME/files')
+    elif action == 'search':
+        search_emails(sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 10)
+    elif action == 'read':
+        read_email(sys.argv[2])
+    else:
+        print("Usage: gmail_tool.py send|search|read|reply|forward ...")

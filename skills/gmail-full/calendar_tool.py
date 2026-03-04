@@ -85,7 +85,7 @@ def create_event(summary, start, end, location=None, description=None, attendees
             names = ", ".join([f"{c['summary']} at {c['start']}" for c in clist])
             print(json.dumps({
                 "status": "CONFLICT_DETECTED",
-                "message": f"Cannot create '{summary}' — conflicts with: {names}. Ask Ishan to confirm or pick a different time. Use --force to override.",
+                "message": f"Cannot create '{summary}' — conflicts with: {names}. Ask user to confirm or pick a different time. Use --force to override.",
                 "conflicts": clist
             }))
             return
